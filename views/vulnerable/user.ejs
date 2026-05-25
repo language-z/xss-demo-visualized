@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户详情 - 漏洞版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/vulnerable/profile" class="back-link">← 返回个人资料</a>
+      <h1>用户详情</h1>
+      <p class="warning">⚠️ DOM型XSS漏洞演示</p>
+    </div>
+
+    <div class="content">
+      <% if (user) { %>
+        <div class="user-detail">
+          <h2><%- user.username %></h2>
+
+          <% if (user.bio) { %>
+            <div class="section">
+              <h3>个人简介</h3>
+              <p class="bio"><%- user.bio %></p>
+            </div>
+          <% } %>
+
+          <% if (user.website) { %>
+            <div class="section">
+              <h3>个人网站</h3>
+              <p class="website"><%- user.website %></p>
+            </div>
+          <% } %>
+
+          <div class="section">
+            <h3>注册时间</h3>
+            <p><%= user.created_at %></p>
+          </div>
+        </div>
+
+        <div class="test-section">
+          <h3>DOM型XSS测试</h3>
+          <p>此页面演示DOM型XSS攻击，攻击完全发生在客户端。</p>
+          <p>尝试在URL中添加fragment参数：</p>
+          <code>#&lt;img src=x onerror=alert('XSS')&gt;</code>
+        </div>
+      <% } else { %>
+        <p class="empty">用户不存在</p>
+      <% } %>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 漏洞代码：直接将URL fragment插入DOM
+    function loadFromHash() {
+      var hash = window.location.hash.substring(1);
+      if (hash) {
+        document.getElementById('user-content').innerHTML = decodeURIComponent(hash);
+      }
+    }
+
+    // 页面加载时执行
+    window.onload = function() {
+      // 注意：此代码存在DOM型XSS漏洞
+      // 实际生产环境中不应直接使用innerHTML
+      loadFromHash();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户详情 - 安全版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/secure/profile" class="back-link">← 返回个人资料</a>
+      <h1>用户详情</h1>
+      <p class="info">✅ 已启用三层纵深防御</p>
+    </div>
+
+    <div class="content">
+      <% if (user) { %>
+        <div class="user-detail">
+          <h2><%= user.username %></h2>
+
+          <% if (user.bio) { %>
+            <div class="section">
+              <h3>个人简介</h3>
+              <p class="bio"><%= user.bio %></p>
+            </div>
+          <% } %>
+
+          <% if (user.website) { %>
+            <div class="section">
+              <h3>个人网站</h3>
+              <p class="website"><%= user.website %></p>
+            </div>
+          <% } %>
+
+          <div class="section">
+            <h3>注册时间</h3>
+            <p><%= user.created_at %></p>
+          </div>
+        </div>
+
+        <div class="defense-info">
+          <h3>防御机制说明</h3>
+          <ul>
+            <li><strong>输出编码：</strong>EJS自动HTML转义</li>
+            <li><strong>HTML净化：</strong>DOMPurify移除危险标签和属性</li>
+            <li><strong>CSP防护：</strong>限制脚本执行来源</li>
+          </ul>
+        </div>
+
+        <div class="test-section">
+          <h3>DOM型XSS测试</h3>
+          <p>此页面已防护DOM型XSS攻击：</p>
+          <ul>
+            <li>不使用innerHTML处理用户输入</li>
+            <li>使用textContent安全显示内容</li>
+            <li>CSP限制内联脚本执行</li>
+          </ul>
+        </div>
+      <% } else { %>
+        <p class="empty">用户不存在</p>
+      <% } %>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 安全代码：使用textContent代替innerHTML
+    // 此页面不处理URL fragment，避免DOM型XSS
+  </script>
+</body>
+</html>

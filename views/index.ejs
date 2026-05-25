@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XSS攻击防御系统</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .feature-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    .feature-card p {
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .feature-card a {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .feature-card a:hover {
+      background: #5a6fd6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>XSS攻击防御系统</h1>
+    <p class="subtitle">基于Node.js/Express的三层纵深防御体系</p>
+
+    <div class="card-grid">
+      <div class="card vulnerable">
+        <h2>漏洞版本</h2>
+        <p>无任何防御措施，用于演示XSS攻击</p>
+        <ul>
+          <li><a href="/vulnerable/guestbook">留言板</a> - 存储型XSS</li>
+          <li><a href="/vulnerable/profile">个人资料</a> - 存储型XSS</li>
+          <li><a href="/vulnerable/search?q=test">搜索</a> - 反射型XSS</li>
+          <li><a href="/vulnerable/domxss">DOM型XSS</a> - DOM型XSS</li>
+        </ul>
+        <div class="warning">⚠️ 警告：此版本存在安全漏洞，请勿输入敏感信息</div>
+      </div>
+
+      <div class="card secure">
+        <h2>安全版本</h2>
+        <p>启用三层纵深防御，有效抵御XSS攻击</p>
+        <ul>
+          <li><a href="/secure/guestbook">留言板</a> - 安全版本</li>
+          <li><a href="/secure/profile">个人资料</a> - 安全版本</li>
+          <li><a href="/secure/search?q=test">搜索</a> - 安全版本</li>
+          <li><a href="/secure/domxss">DOM型XSS</a> - 安全版本</li>
+        </ul>
+        <div class="info">✅ 已启用输入验证、输出编码、CSP防护</div>
+      </div>
+    </div>
+
+    <div class="architecture">
+      <h3>三层纵深防御体系</h3>
+      <div class="layers">
+        <div class="layer">
+          <h4>第一层：输入验证</h4>
+          <p>express-validator + XSS向量过滤</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="layer">
+          <h4>第二层：输出编码</h4>
+          <p>EJS自动转义 + DOMPurify净化</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="layer">
+          <h4>第三层：CSP防护</h4>
+          <p>Content Security Policy + HttpOnly Cookie</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新增功能 -->
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>安全监控仪表盘</h3>
+        <p>实时监控攻击日志、统计分析</p>
+        <a href="/admin/dashboard">进入</a>
+      </div>
+
+
+</body>
+</html>

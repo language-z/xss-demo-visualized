@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM型XSS - 安全版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/secure" class="back-link">← 返回安全版本</a>
+      <h1>DOM型XSS防御演示</h1>
+      <p class="info">✅ 已启用安全的DOM操作方式</p>
+    </div>
+
+    <div class="content">
+      <div class="info-box secure">
+        <h2>DOM型XSS防御原则</h2>
+        <ul>
+          <li>使用textContent代替innerHTML处理用户输入</li>
+          <li>使用DOMPurify等库净化HTML内容</li>
+          <li>对URL参数进行验证和过滤</li>
+        </ul>
+      </div>
+
+      <!-- 演示1: URL Fragment注入 -->
+      <div class="demo-section">
+        <h3>演示1: URL Fragment注入</h3>
+        <p>通过URL中的#后面的内容注入恶意脚本</p>
+        <div class="defense-info">
+          <h3>当前修复方法</h3>
+          <ul>
+            <li>从 <code>location.hash</code> 读取内容后，只用 <code>textContent</code> 写入页面。</li>
+            <li>用户输入会作为普通文本显示，不会被浏览器解析为HTML或执行事件脚本。</li>
+          </ul>
+        </div>
+        <div class="test-code">
+          <code>http://localhost:3000/secure/domxss#&lt;img src=x onerror=alert('XSS')&gt;</code>
+        </div>
+        <div class="result-box">
+          <h4>输出区域：</h4>
+          <div id="fragment-output"></div>
+        </div>
+        <button type="button" id="fragment-test-button">测试Fragment注入</button>
+      </div>
+
+      <!-- 演示2: innerHTML注入 -->
+      <div class="demo-section">
+        <h3>演示2: innerHTML注入</h3>
+        <p>输入内容后通过innerHTML直接插入DOM</p>
+        <div class="defense-info">
+          <h3>当前修复方法</h3>
+          <ul>
+            <li>使用 <code>textContent</code> 输出输入框内容，替代危险的 <code>innerHTML</code>。</li>
+          </ul>
+        </div>
+        <div class="result-box">
+          <h4>输出区域：</h4>
+          <div id="param-output"></div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="param-input" placeholder="输入内容" style="flex: 1; padding: 8px;">
+          <button type="button" id="param-test-button">测试innerHTML注入</button>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>安全代码对比</h3>
+        <div class="test-code">
+          <code>// ❌ 危险：直接使用innerHTML</code>
+          <code>element.innerHTML = userInput;</code>
+          <code></code>
+          <code>// ✅ 安全：使用textContent</code>
+          <code>element.textContent = userInput;</code>
+          <code></code>
+          <code>// ✅ 安全：使用DOMPurify净化</code>
+          <code>element.innerHTML = DOMPurify.sanitize(userInput);</code>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 安全代码1: 使用textContent显示Fragment
+    function loadFromFragmentSafe() {
+      var hash = window.location.hash.substring(1);
+      if (hash) {
+        document.getElementById('fragment-output').textContent = decodeURIComponent(hash);
+      } else {
+        alert('请先在URL中添加fragment');
+      }
+    }
+
+    // 安全代码2: 使用textContent显示用户输入
+    function testParamSafe() {
+      var input = document.getElementById('param-input').value;
+      if (input) {
+        document.getElementById('param-output').textContent = input;
+      }
+    }
+
+    document.getElementById('fragment-test-button').addEventListener('click', loadFromFragmentSafe);
+    document.getElementById('param-test-button').addEventListener('click', testParamSafe);
+    document.getElementById('param-input').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        testParamSafe();
+      }
+    });
+  </script>
+</body>
+</html>

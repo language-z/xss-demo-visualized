@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>留言板 - 安全版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/secure" class="back-link">← 返回安全版本</a>
+      <h1>留言板</h1>
+      <p class="info">✅ 已启用三层纵深防御</p>
+    </div>
+
+    <div class="content">
+      <div class="form-section">
+        <h2>发表留言</h2>
+        <form action="/secure/guestbook" method="POST">
+          <div class="form-group">
+            <label for="author">昵称：</label>
+            <input type="text" id="author" name="author" required maxlength="50"
+                   pattern="[a-zA-Z0-9一-龥_]+"
+                   title="只能包含字母、数字、中文和下划线">
+            <small>只能包含字母、数字、中文和下划线，1-50个字符</small>
+          </div>
+          <div class="form-group">
+            <label for="content">留言内容：</label>
+            <textarea id="content" name="content" required maxlength="1000" rows="4"></textarea>
+            <small>1-1000个字符</small>
+          </div>
+          <button type="submit">发表留言</button>
+        </form>
+      </div>
+
+      <div class="messages-section">
+        <h2>留言列表</h2>
+        <% if (messages && messages.length > 0) { %>
+          <div class="messages">
+            <% messages.forEach(function(msg) { %>
+              <div class="message">
+                <div class="message-header">
+                  <span class="author"><%= msg.author %></span>
+                  <span class="time"><%= msg.created_at %></span>
+                </div>
+                <div class="message-content">
+                  <%= msg.content %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <p class="empty">暂无留言</p>
+        <% } %>
+      </div>
+
+      <div class="defense-info">
+        <h3>防御机制说明</h3>
+        <ul>
+          <li><strong>输入验证：</strong>验证昵称格式、内容长度</li>
+          <li><strong>XSS过滤：</strong>拦截常见XSS攻击向量</li>
+          <li><strong>输出编码：</strong>EJS自动HTML转义 + DOMPurify净化</li>
+          <li><strong>CSP防护：</strong>限制脚本执行来源</li>
+        </ul>
+      </div>
+
+      <div class="test-section">
+        <h3>XSS测试</h3>
+        <p>尝试使用与漏洞版本相同的测试代码，验证防御效果：</p>
+        <div class="test-code">
+          <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+          <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+          <code>&lt;svg onload=alert('XSS')&gt;</code>
+        </div>
+        <p class="info">预期结果：XSS攻击被拦截或内容被净化</p>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>攻击日志</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .log-table th, .log-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .log-table th {
+      background: #667eea;
+      color: white;
+    }
+    .log-table tr:hover {
+      background: #f5f5f5;
+    }
+    .badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+    }
+    .badge-success { background: #d4edda; color: #155724; }
+    .badge-danger { background: #f8d7da; color: #721c24; }
+    .badge-warning { background: #fff3cd; color: #856404; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .toolbar select, .toolbar input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .pagination a, .pagination span {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #333;
+    }
+    .pagination a:hover {
+      background: #667eea;
+      color: white;
+    }
+    .pagination .active {
+      background: #667eea;
+      color: white;
+    }
+    .payload-cell {
+      max-width: 300px;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/" class="back-link">← 返回首页</a>
+      <h1>防御版本攻击日志</h1>
+      <p>仅显示防御版本的XSS攻击记录</p>
+    </div>
+
+    <div class="nav">
+      <a href="/admin/dashboard">仪表盘</a>
+      <a href="/admin/logs">攻击日志</a>
+      <a href="/admin/database">数据库</a>
+      <a href="/admin/logout">退出登录</a>
+    </div>
+
+    <div class="content">
+      <!-- 工具栏 -->
+      <div class="toolbar">
+        <form action="/admin/logs" method="GET" style="display: flex; gap: 10px; align-items: center;">
+          <select name="type">
+            <option value="">所有类型</option>
+            <option value="stored" <%= filters.type === 'stored' ? 'selected' : '' %>>存储型</option>
+            <option value="reflected" <%= filters.type === 'reflected' ? 'selected' : '' %>>反射型</option>
+            <option value="dom" <%= filters.type === 'dom' ? 'selected' : '' %>>DOM型</option>
+          </select>
+          <input type="date" name="startDate" value="<%= filters.startDate || '' %>" placeholder="开始日期">
+          <input type="date" name="endDate" value="<%= filters.endDate || '' %>" placeholder="结束日期">
+          <button type="submit">筛选</button>
+        </form>
+        <a href="/admin/logs/clear" onclick="return confirm('确定要清空所有日志吗？')">
+          <button type="button">清空日志</button>
+        </a>
+      </div>
+
+      <!-- 日志表格 -->
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>时间</th>
+            <th>类型</th>
+            <th>页面</th>
+            <th>IP</th>
+            <th>Payload</th>
+            <th>结果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (logs.data && logs.data.length > 0) { %>
+            <% logs.data.forEach(function(log) { %>
+              <tr>
+                <td><%= log.id %></td>
+                <td><%= new Date(log.timestamp).toLocaleString('zh-CN') %></td>
+                <td><span class="badge badge-warning"><%= log.type %></span></td>
+                <td><%= log.page %></td>
+                <td><%= log.ip %></td>
+                <td class="payload-cell"><%= log.payload %></td>
+                <td>
+                  <% if (log.result === 'blocked') { %>
+                    <span class="badge badge-success">已拦截</span>
+                  <% } else { %>
+                    <span class="badge badge-danger">通过</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" style="text-align: center; color: #888;">暂无攻击记录</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+
+      <!-- 分页 -->
+      <% if (logs.total > logs.limit) { %>
+        <div class="pagination">
+          <% if (logs.page > 1) { %>
+            <a href="?page=<%= logs.page - 1 %>&type=<%= filters.type || '' %>">上一页</a>
+          <% } %>
+          <span>第 <%= logs.page %> / <%= Math.ceil(logs.total / logs.limit) %> 页</span>
+          <% if (logs.page < Math.ceil(logs.total / logs.limit)) { %>
+            <a href="?page=<%= logs.page + 1 %>&type=<%= filters.type || '' %>">下一页</a>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>

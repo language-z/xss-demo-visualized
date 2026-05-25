@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人资料 - 漏洞版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/vulnerable" class="back-link">← 返回漏洞版本</a>
+      <h1>个人资料</h1>
+      <p class="warning">⚠️ 存储型XSS漏洞演示</p>
+    </div>
+
+    <div class="content">
+      <div class="form-section">
+        <h2>创建/更新资料</h2>
+        <form action="/vulnerable/profile" method="POST">
+          <div class="form-group">
+            <label for="username">用户名：</label>
+            <input type="text" id="username" name="username" required maxlength="30">
+          </div>
+          <div class="form-group">
+            <label for="bio">个人简介：</label>
+            <textarea id="bio" name="bio" maxlength="500" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="website">个人网站：</label>
+            <input type="text" id="website" name="website" placeholder="https://example.com">
+          </div>
+          <button type="submit">保存资料</button>
+        </form>
+      </div>
+
+      <div class="users-section">
+        <h2>用户列表</h2>
+        <% if (users && users.length > 0) { %>
+          <div class="users">
+            <% users.forEach(function(user) { %>
+              <div class="user-card">
+                <h3><%- user.username %></h3>
+                <% if (user.bio) { %>
+                  <p class="bio"><%- user.bio %></p>
+                <% } %>
+                <% if (user.website) { %>
+                  <p class="website">网站：<%- user.website %></p>
+                <% } %>
+                <a href="/vulnerable/user/<%= user.id %>">查看详情</a>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <p class="empty">暂无用户资料</p>
+        <% } %>
+      </div>
+
+      <div class="test-section">
+        <h3>XSS测试</h3>
+        <p>尝试在个人简介中输入以下测试代码：</p>
+        <div class="test-code">
+          <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+          <code>&lt;svg onload=alert('XSS')&gt;</code>
+          <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>

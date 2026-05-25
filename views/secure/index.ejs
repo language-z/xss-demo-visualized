@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>安全版本 - XSS防御演示</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/" class="back-link">← 返回首页</a>
+      <h1>安全版本</h1>
+      <p class="info">✅ 已启用三层纵深防御</p>
+    </div>
+
+    <div class="nav">
+      <a href="/secure/guestbook">留言板</a>
+      <a href="/secure/profile">个人资料</a>
+      <a href="/secure/search?q=hello">搜索</a>
+      <a href="/secure/domxss">DOM型XSS</a>
+    </div>
+
+    <div class="content">
+      <h2>三层纵深防御体系</h2>
+      <p>此页面已启用完整的XSS防御机制，所有用户输入都经过验证、编码和净化。</p>
+
+      <div class="defense-layers">
+        <div class="layer">
+          <h3>第一层：输入验证</h3>
+          <ul>
+            <li>express-validator基础验证</li>
+            <li>XSS向量正则过滤</li>
+            <li>白名单机制</li>
+          </ul>
+        </div>
+
+        <div class="layer">
+          <h3>第二层：输出编码</h3>
+          <ul>
+            <li>EJS自动HTML转义</li>
+            <li>DOMPurify HTML净化</li>
+            <li>多上下文编码策略</li>
+          </ul>
+        </div>
+
+        <div class="layer">
+          <h3>第三层：CSP防护</h3>
+          <ul>
+            <li>Content Security Policy</li>
+            <li>HttpOnly Cookie</li>
+            <li>安全响应头</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="test-cases">
+        <h3>对比测试</h3>
+        <p>尝试使用与漏洞版本相同的XSS测试代码，验证防御效果：</p>
+        <ul>
+          <li><a href="/secure/guestbook">留言板</a> - 测试存储型XSS防御</li>
+          <li><a href="/secure/profile">个人资料</a> - 测试存储型XSS防御</li>
+          <li><a href="/secure/search?q=<script>alert('XSS')</script>">搜索</a> - 测试反射型XSS防御</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>

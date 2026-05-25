@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索 - 漏洞版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/vulnerable" class="back-link">← 返回漏洞版本</a>
+      <h1>搜索</h1>
+      <p class="warning">⚠️ 反射型XSS漏洞演示</p>
+    </div>
+
+    <div class="content">
+      <div class="search-section">
+        <form action="/vulnerable/search" method="GET">
+          <div class="form-group">
+            <label for="q">搜索关键词：</label>
+            <input type="text" id="q" name="q" value="<%= query %>" placeholder="输入搜索内容">
+          </div>
+          <button type="submit">搜索</button>
+        </form>
+      </div>
+
+      <% if (query) { %>
+        <div class="search-results">
+          <h2>搜索结果</h2>
+          <p>搜索关键词：<span class="query"><%- query %></span></p>
+          <p class="info">如果您看到了弹窗，说明反射型XSS攻击成功！</p>
+        </div>
+      <% } %>
+
+      <div class="test-section">
+        <h3>XSS测试</h3>
+        <p>尝试在搜索框中输入以下测试代码：</p>
+        <div class="test-code">
+          <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+          <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+          <code>javascript:alert('XSS')</code>
+        </div>
+        <p>或者直接访问以下URL：</p>
+        <code>/vulnerable/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>

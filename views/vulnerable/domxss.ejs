@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM型XSS - 漏洞版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/vulnerable" class="back-link">← 返回漏洞版本</a>
+      <h1>DOM型XSS攻击演示</h1>
+      <p class="warning">⚠️ 攻击完全发生在客户端，不经过服务器</p>
+    </div>
+
+    <div class="content">
+      <div class="info-box">
+        <h2>什么是DOM型XSS？</h2>
+        <p>DOM型XSS是一种完全发生在客户端的XSS攻击，攻击者通过控制页面的DOM环境来执行恶意脚本，服务器端不参与攻击过程。</p>
+      </div>
+
+      <!-- 演示1: URL Fragment注入 -->
+      <div class="demo-section">
+        <h3>演示1: URL Fragment注入</h3>
+        <p>通过URL中的#后面的内容注入恶意脚本</p>
+        <div class="test-code">
+          <code>http://localhost:3000/vulnerable/domxss#&lt;img src=x onerror=alert('XSS')&gt;</code>
+        </div>
+        <div class="result-box">
+          <h4>输出区域：</h4>
+          <div id="fragment-output"></div>
+        </div>
+        <button onclick="loadFromFragment()">测试Fragment注入</button>
+      </div>
+
+      <!-- 演示2: innerHTML注入 -->
+      <div class="demo-section">
+        <h3>演示2: innerHTML注入</h3>
+        <p>输入内容后通过innerHTML直接插入DOM</p>
+        <div class="result-box">
+          <h4>输出区域：</h4>
+          <div id="param-output"></div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="param-input" placeholder="输入内容" style="flex: 1; padding: 8px;">
+          <button onclick="testParamInjection()">测试innerHTML注入</button>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>常用DOM型XSS测试Payload</h3>
+        <div class="test-code">
+          <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+          <code>&lt;svg onload=alert('XSS')&gt;</code>
+          <code>" onmouseover="alert('XSS')" "</code>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 漏洞代码1: 从URL Fragment读取并直接插入DOM
+    function loadFromFragment() {
+      var hash = window.location.hash.substring(1);
+      if (hash) {
+        document.getElementById('fragment-output').innerHTML = decodeURIComponent(hash);
+      } else {
+        alert('请先在URL中添加fragment，例如：#<img src=x onerror=alert("XSS")>');
+      }
+    }
+
+    // 漏洞代码2: 直接插入用户输入到DOM
+    function testParamInjection() {
+      var input = document.getElementById('param-input').value;
+      if (input) {
+        document.getElementById('param-output').innerHTML = input;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>漏洞版本 - XSS攻击演示</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/" class="back-link">← 返回首页</a>
+      <h1>漏洞版本</h1>
+      <p class="warning">⚠️ 此版本无任何XSS防御措施</p>
+    </div>
+
+    <div class="nav">
+      <a href="/vulnerable/guestbook">留言板</a>
+      <a href="/vulnerable/profile">个人资料</a>
+      <a href="/vulnerable/search?q=hello">搜索</a>
+      <a href="/vulnerable/domxss">DOM型XSS</a>
+    </div>
+
+    <div class="content">
+      <h2>XSS攻击演示说明</h2>
+      <p>此页面用于演示各种XSS攻击类型，所有用户输入都未经验证和编码直接存储和显示。</p>
+
+      <div class="test-cases">
+        <h3>测试用例</h3>
+        <div class="test-case">
+          <h4>存储型XSS - 留言板</h4>
+          <p>尝试在留言内容中输入：</p>
+          <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+        </div>
+
+        <div class="test-case">
+          <h4>反射型XSS - 搜索</h4>
+          <p>访问URL：</p>
+          <code>/vulnerable/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+        </div>
+
+        <div class="test-case">
+          <h4>存储型XSS - 个人资料</h4>
+          <p>尝试在个人简介中输入：</p>
+          <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+        </div>
+
+        <div class="test-case">
+          <h4>DOM型XSS</h4>
+          <p>访问URL（Fragment注入）：</p>
+          <code>/vulnerable/domxss#&lt;img src=x onerror=alert('XSS')&gt;</code>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>

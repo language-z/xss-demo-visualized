@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>留言板 - 漏洞版本</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/vulnerable" class="back-link">← 返回漏洞版本</a>
+      <h1>留言板</h1>
+      <p class="warning">⚠️ 存储型XSS漏洞演示</p>
+    </div>
+
+    <div class="content">
+      <div class="form-section">
+        <h2>发表留言</h2>
+        <form action="/vulnerable/guestbook" method="POST">
+          <div class="form-group">
+            <label for="author">昵称：</label>
+            <input type="text" id="author" name="author" required maxlength="50">
+          </div>
+          <div class="form-group">
+            <label for="content">留言内容：</label>
+            <textarea id="content" name="content" required maxlength="1000" rows="4"></textarea>
+          </div>
+          <button type="submit">发表留言</button>
+        </form>
+      </div>
+
+      <div class="messages-section">
+        <h2>留言列表</h2>
+        <% if (messages && messages.length > 0) { %>
+          <div class="messages">
+            <% messages.forEach(function(msg) { %>
+              <div class="message">
+                <div class="message-header">
+                  <span class="author"><%- msg.author %></span>
+                  <span class="time"><%= msg.created_at %></span>
+                </div>
+                <div class="message-content">
+                  <%- msg.content %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <p class="empty">暂无留言</p>
+        <% } %>
+      </div>
+
+      <div class="test-section">
+        <h3>XSS测试</h3>
+        <p>尝试在留言内容中输入以下测试代码：</p>
+        <div class="test-code">
+          <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+          <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+          <code>&lt;svg onload=alert('XSS')&gt;</code>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p><a href="/">返回首页</a></p>
+    </footer>
+  </div>
+</body>
+</html>
