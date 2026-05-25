@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2026-05-24T17:20:22.633Z",
+    "type": "stored",
+    "payload": "<script>alert('XSS')</script>",
+    "page": "/secure/guestbook",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0",
+    "result": "blocked"
+  },
+  {
+    "id": 2,
+    "timestamp": "2026-05-24T17:21:18.160Z",
+    "type": "stored",
+    "payload": "<script>alert('XSS')</script>",
+    "page": "/secure/profile",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0",
+    "result": "blocked"
+  },
+  {
+    "id": 3,
+    "timestamp": "2026-05-24T17:21:32.639Z",
+    "type": "reflected",
+    "payload": "<script>alert('XSS')</script>",
+    "page": "/secure/search?q=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0",
+    "result": "blocked"
+  }
+]
