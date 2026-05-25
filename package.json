@@ -1,0 +1,29 @@
+{
+  "name": "xss-defense-system",
+  "version": "1.0.0",
+  "description": "XSS攻击防御系统 - 三层纵深防御体系",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "init-db": "node db/init.js",
+    "start:windows": "powershell -ExecutionPolicy Bypass -File scripts/start-windows.ps1",
+    "start:ubuntu": "bash scripts/start-ubuntu.sh"
+  },
+  "keywords": ["xss", "security", "nodejs", "express"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dompurify": "^3.0.8",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "jsdom": "^24.0.0",
+    "sql.js": "^1.10.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
